@@ -1,7 +1,6 @@
-import requests
 import logging
 
-from pages.all_books_page import AllBooksPage
+from controllers.get_statistic_for_all import print_statistic_all
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -10,18 +9,28 @@ logging.basicConfig(level=logging.INFO,
 
 logger = logging.getLogger('scraping')
 
-logger.info('Loading statistics...')
+USER_CHOICE = '''Enter one of the following:
 
-page_content = requests.get('https://virtualsoccer.ru/statistics.php?act=29&full_view=0&sort=5&order=0&division=0&fin_season=0&group_stat=0&pl_min_season=66&plus_minus_type=100&country=80').content
+- 'a' to print statistic for all tournaments
+- 'q' to exit
 
-page = AllBooksPage(page_content)
+Enter your choice: '''
 
-books = page.books
 
-for page_num in range(1, page.page_count):
-    url = f'http://books.toscrape.com/catalogue/page-{page_num + 1}.html'
-    page_content = requests.get(url).content
-    page = AllBooksPage(page_content)
-    books.extend(page.books)
+user_choices = {
+    'a': print_statistic_all,
+}
 
-print(len(books))
+
+def menu():
+    user_input = input(USER_CHOICE)
+    while user_input != 'q':
+        if user_input in 'a':
+            user_choices[user_input]()
+        else:
+            print('Invalid command. Please try again.')
+
+        user_input = input(USER_CHOICE)
+
+
+menu()
