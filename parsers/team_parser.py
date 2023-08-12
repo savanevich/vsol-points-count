@@ -28,7 +28,7 @@ class TeamParser:
         locator = TeamStatisticLocators.MINUS_LOCATOR
         team_minuses = self.parent.select_one(locator).string
         logger.debug(f'Found team has {team_minuses} minuses.')
-        return team_minuses
+        return int(team_minuses)
 
     @property
     def pluses(self):
@@ -36,7 +36,7 @@ class TeamParser:
         locator = TeamStatisticLocators.PLUS_LOCATOR
         team_pluses = self.parent.select_one(locator).string
         logger.debug(f'Found team has {team_pluses} minuses.')
-        return team_pluses
+        return int(team_pluses)
 
     @property
     def total(self):
@@ -44,4 +44,4 @@ class TeamParser:
         locator = TeamStatisticLocators.TOTAL_LOCATOR
         team_total = self.parent.select_one(locator).string
         logger.debug(f'Found team has {team_total} total.')
-        return team_total
+        return int(team_total)
