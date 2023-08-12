@@ -22,7 +22,7 @@ def print_statistics_table(statistics, index):
     result = TABLE_HEADER_MARKUP
 
     for team_num, (team, data) in enumerate(statistics, start=index):
-        result += f'[tr][td]{team_num}[/td][td]{team}[/td][td]{data["pluses"]}{data["minuses"]}[/td][td]{data["total"]}[/td][td][img]https://virtualsoccer.ru/styles/school_{dict(TEAMS)[team].value}_1.png[/img][/td][/tr]\n'
+        result += f'[tr][td]{team_num}[/td][td]{team}[/td][td]{data["pluses"]}{data["minuses"] if data["minuses"] != 0 else ""}[/td][td]{data["total"]}[/td][td][img]https://virtualsoccer.ru/styles/school_{dict(TEAMS)[team].value}_1.png[/img][/td][/tr]\n'
 
     result += TABLE_BOTTOM_MARKUP
     print(result)

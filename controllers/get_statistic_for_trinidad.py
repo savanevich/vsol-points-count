@@ -22,7 +22,7 @@ def print_statistics_table(statistics, index):
     result = TABLE_HEADER_MARKUP
 
     for team_num, (team, data) in enumerate(statistics, start=index):
-        result += f'[tr][td]{team_num}[/td][td]{team}[/td][td]{data["pluses"]}{data["minuses"]}[/td][td]{data["total"]}[/td][td][img]https://virtualsoccer.ru/styles/school_{dict(TEAMS)[team].value}_1.png[/img][/td][/tr]\n'
+        result += f'[tr][td]{team_num}[/td][td]{team}[/td][td]{data["pluses"]}{data["minuses"] if data["minuses"] != 0 else ""}[/td][td]{data["total"]}[/td][td][img]https://virtualsoccer.ru/styles/school_{dict(TEAMS)[team].value}_1.png[/img][/td][/tr]\n'
 
     result += TABLE_BOTTOM_MARKUP
     print(result)
@@ -56,17 +56,17 @@ def print_statistic_trinidad():
     for team in dict(TEAMS).keys():
         total_result[team] = {"pluses": 0, "minuses": 0, "total": 0}
 
-        for team_off_season in country_cup_statistic:
-            if team_off_season.name == team:
-                total_result[team]["pluses"] += team_off_season.pluses
-                total_result[team]["minuses"] += team_off_season.minuses
-                total_result[team]["total"] += team_off_season.total
+        for country_cup_team in country_cup_statistic:
+            if country_cup_team.name == team:
+                total_result[team]["pluses"] += country_cup_team.pluses
+                total_result[team]["minuses"] += country_cup_team.minuses
+                total_result[team]["total"] += country_cup_team.total
 
-        for team_championship in challenge_cup_statistic:
-            if team_championship.name == team:
-                total_result[team]["pluses"] += team_championship.pluses
-                total_result[team]["minuses"] += team_championship.minuses
-                total_result[team]["total"] += team_championship.total
+        for challenge_cup_team in challenge_cup_statistic:
+            if challenge_cup_team.name == team:
+                total_result[team]["pluses"] += challenge_cup_team.pluses
+                total_result[team]["minuses"] += challenge_cup_team.minuses
+                total_result[team]["total"] += challenge_cup_team.total
 
     # Sort and print statistics
     sorted_total_result = sorted(
