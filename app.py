@@ -1,8 +1,6 @@
 import logging
 
-from controllers.get_statistic_for_cubanas import print_statistic_cubanas
-from controllers.get_statistic_for_ciego import print_statistic_ciego
-from controllers.get_statistic_for_trinidad import print_statistic_trinidad
+from controllers.get_statistic import print_statistic_cubanas, print_statistic_ciego, print_statistic_trinidad
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
