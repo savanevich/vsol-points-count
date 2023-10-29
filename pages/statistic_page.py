@@ -15,5 +15,7 @@ class StatisticsPage:
 
     @property
     def teams(self):
-        logger.debug(f'Finding all teams in the page using `{PointsStatisticLocators.TEAM}`.')
+        logger.debug(
+            f'Finding all teams in the page using `{PointsStatisticLocators.TEAM}`.')
+
         return [TeamParser(e) for e in self.soup.select(PointsStatisticLocators.TEAM)]

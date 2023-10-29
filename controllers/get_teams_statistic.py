@@ -2,7 +2,8 @@ import requests
 import logging
 
 from pages.statistic_page import StatisticsPage
-from constants import TEAMS, ALL_TOURNAMENTS_STATISTIC_URL, COUNTRY_CUP_STATISTIC_URL, CHALLENGE_CUP_STATISTIC_URL, OFF_SEASON_CUP_TOURNAMENTS_STATISTIC_URL, CHAMPIONSHIP_TOURNAMENTS_STATISTIC_URL, TABLE_HEADER_MARKUP, TABLE_BOTTOM_MARKUP
+from controllers.constants import ALL_TOURNAMENTS_STATISTIC_URL, COUNTRY_CUP_STATISTIC_URL, CHALLENGE_CUP_STATISTIC_URL, OFF_SEASON_CUP_TOURNAMENTS_STATISTIC_URL, CHAMPIONSHIP_TOURNAMENTS_STATISTIC_URL, TABLE_HEADER_MARKUP, TABLE_BOTTOM_MARKUP
+from participants import PARTICIPANTS
 
 logger = logging.getLogger('scraping.get_statistic')
 logging.basicConfig(level=logging.INFO)
@@ -30,12 +31,12 @@ def fetch_statistics(url):
 def print_statistics_table(statistics, index):
     result = TABLE_HEADER_MARKUP
 
-    for team_num, (team, data) in enumerate(statistics, start=index):
+    for team_num, (team_name, data) in enumerate(statistics, start=index):
+        team = PARTICIPANTS.get_participant_by_name(team_name)
         minuses = data["minuses"] if data["minuses"] != 0 else ""
-        team_image_url = f'https://virtualsoccer.ru/styles/school_{dict(TEAMS)[team].value}_1.png'
         result += (
-            f'[tr][td]{team_num}[/td][td]{team}[/td][td]{data["pluses"]}{minuses}[/td]'
-            f'[td]{data["total"]}[/td][td][img]{team_image_url}[/img][/td][/tr]\n'
+            f'[tr][td]{team_num}[/td][td][img]https://virtualsoccer.ru/pics/teams18/{team.id}.png[/img] [url=https://virtualsoccer.ru/roster.php?num={team.id}][color=#0000BF]{team_name}[/color][/url][/td][td]{data["pluses"]}{minuses}[/td]'
+            f'[td]{data["total"]}[/td][/tr]\n'
         )
 
     result += TABLE_BOTTOM_MARKUP
@@ -45,12 +46,12 @@ def print_statistics_table(statistics, index):
 def calculate_total_result(statistics):
     total_result = {}
 
-    for team in dict(TEAMS).keys():
-        total_result[team] = {"pluses": 0, "minuses": 0, "total": 0}
+    for team in PARTICIPANTS.participants:
+        total_result[team.name] = {"pluses": 0, "minuses": 0, "total": 0}
 
         for tournament_statistic in statistics:
             for team_statistic in tournament_statistic:
-                if team_statistic.name == team:
+                if team_statistic.name == team.name:
                     team_name = team_statistic.name
                     total_result[team_name]["pluses"] += team_statistic.pluses
                     total_result[team_name]["minuses"] += team_statistic.minuses
