@@ -29,21 +29,39 @@ class PlayerParser:
         :return: The number of pluses (or None if not found).
         """
         logger.debug('Finding pluses for player...')
-        non_national_team_row = self.parent.find_all(
-            text=re.compile('Во всех матчах за команды:'))
-
+        
+        non_national_team_row = self._find_team_row([
+            'Во всех матчах за команды:',
+            'Суммарно во всех матчах:'
+        ])
+        
         if not non_national_team_row:
             logger.debug('Did not play for the national team.')
-            non_national_team_row = self.parent.find_all(
-                text=re.compile('Суммарно во всех матчах:'))
+            return 0
 
-        team_pluses = non_national_team_row[0].parent.parent.select_one(
-            PlayerStatisticLocators.PLUS_LOCATOR)
+        team_pluses = non_national_team_row.select_one(
+            PlayerStatisticLocators.PLUS_LOCATOR
+        )
 
         if not team_pluses:
             logger.debug('Did not find pluses.')
             return 0
 
-        logger.debug(f'Found player has {team_pluses} pluses.')
+        sign = non_national_team_row.select_one(
+            PlayerStatisticLocators.SIGN_LOCATOR
+        )
 
-        return int(team_pluses.string) if team_pluses.string.isdigit() else 0
+        pluses = int(team_pluses.string) if team_pluses.string.isdigit() else 0
+
+        if sign and sign['src'] == 'pics/down.gif':
+            pluses = -pluses
+
+        logger.debug(f'Found player has {pluses} pluses.')
+        return pluses
+
+    def _find_team_row(self, patterns):
+        for pattern in patterns:
+            row = self.parent.find_all(text=re.compile(pattern))
+            if row:
+                return row[0].parent.parent
+        return None
