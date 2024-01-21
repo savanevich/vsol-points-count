@@ -42,6 +42,11 @@ def print_players_statistics_table(statistics: List[Dict[str, Any]], index: int)
         player = PLAYERS_PARTICIPANTS.get_participant_by_id(player_id)
         player_team = player.team(PARTICIPANTS)
 
+        if not player_team:
+            logger.error(
+                f'Cannot find team for player {player.name} ({player_id})')
+            continue
+
         row = (
             f'[tr][td]{player_num}[/td][td][url=https://virtualsoccer.ru/player.php?num={player_id}][color=#0000BF]{player.name}[/color][/url][/td]'
             f'[td][img]https://virtualsoccer.ru/pics/teams18/{player_team.id}.png[/img] [url=https://virtualsoccer.ru/roster.php?num={player_team.id}]'
