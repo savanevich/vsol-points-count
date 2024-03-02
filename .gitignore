@@ -1,3 +1,4 @@
 .idea
 logs.txt
 __pycache__
+/fixtures
