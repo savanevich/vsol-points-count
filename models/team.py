@@ -10,10 +10,11 @@ class TeamDivision(Enum):
     D2 = 'D2'
     D3A = 'D3'
     D3B = 'D3'
+    KLK = 'КЛК'
 
 
 class Team:
-    def __init__(self, id: int, name: str, school: TeamSchool, division: TeamDivision):
+    def __init__(self, id: int, name: str, school: TeamSchool, division: TeamDivision = TeamDivision.D1):
         self.id = id
         self.name = name
         self.school = school

@@ -4,7 +4,7 @@ import json
 
 from pages.statistic_page import StatisticsPage
 from controllers.constants import ALL_TOURNAMENTS_STATISTIC_URL, COUNTRY_CUP_STATISTIC_URL, CHALLENGE_CUP_STATISTIC_URL, OFF_SEASON_CUP_TOURNAMENTS_STATISTIC_URL, CHAMPIONSHIP_TOURNAMENTS_STATISTIC_URL, TABLE_HEADER_MARKUP, TABLE_BOTTOM_MARKUP
-from participants import PARTICIPANTS
+from participants import PARTICIPANTS, STATISTIC_CORRECTIONS
 
 logger = logging.getLogger('scraping.get_statistic')
 logging.basicConfig(level=logging.INFO)
@@ -47,7 +47,7 @@ def print_statistics_table(statistics, index, statistics_file_path):
         diff_num_html = ""
 
         if previous_data:
-            for prev_participant_i, prev_participant  in enumerate(previous_data):
+            for prev_participant_i, prev_participant in enumerate(previous_data):
                 if prev_participant[0] == team_name:
                     prev_total = prev_participant[1]["total"]
                     prev_participant_num = prev_participant_i + 1
@@ -73,11 +73,14 @@ def print_statistics_table(statistics, index, statistics_file_path):
     print(result)
 
 
-def calculate_total_result(statistics):
+def calculate_total_result(statistics, initial_result=None):
     total_result = {}
 
     for team in PARTICIPANTS.participants:
-        total_result[team.name] = {"pluses": 0, "minuses": 0, "total": 0}
+        if initial_result and team.name in initial_result:
+            total_result[team.name] = initial_result[team.name]
+        else:
+            total_result[team.name] = {"pluses": 0, "minuses": 0, "total": 0}
 
         for tournament_statistic in statistics:
             for team_statistic in tournament_statistic:
@@ -128,7 +131,7 @@ def print_statistic_cubanas():
 
     logger.info('Finished loading statistics for Cubanas.')
 
-    total_result = calculate_total_result(statistics)
+    total_result = calculate_total_result(statistics, initial_result=STATISTIC_CORRECTIONS['cubanas'])
     print_statistics_table(total_result, index=1, statistics_file_path=statistics_file_path)
     commit_new_statistics(total_result, statistics_file_path)
 
