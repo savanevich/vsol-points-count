@@ -3,7 +3,7 @@ import logging
 import json
 
 from pages.statistic_page import StatisticsPage
-from controllers.constants import ALL_TOURNAMENTS_STATISTIC_URL, COUNTRY_CUP_STATISTIC_URL, CHALLENGE_CUP_STATISTIC_URL, OFF_SEASON_CUP_TOURNAMENTS_STATISTIC_URL, CHAMPIONSHIP_TOURNAMENTS_STATISTIC_URL, TABLE_HEADER_MARKUP, TABLE_BOTTOM_MARKUP
+from controllers.constants import CURRENT_SEASON_ALL_TOURNAMENTS_STATISTIC_URL, COUNTRY_CUP_STATISTIC_URL, CHALLENGE_CUP_STATISTIC_URL, OFF_SEASON_CUP_TOURNAMENTS_STATISTIC_URL, CHAMPIONSHIP_TOURNAMENTS_STATISTIC_URL, TABLE_HEADER_MARKUP, TABLE_BOTTOM_MARKUP
 from participants import PARTICIPANTS, STATISTIC_CORRECTIONS
 
 logger = logging.getLogger('scraping.get_statistic')
@@ -126,7 +126,7 @@ def print_statistic_cubanas():
     statistics_file_path = './fixtures/cubanas.json'
 
     statistics = [
-        fetch_statistics(ALL_TOURNAMENTS_STATISTIC_URL),
+        fetch_statistics(CURRENT_SEASON_ALL_TOURNAMENTS_STATISTIC_URL),
     ]
 
     logger.info('Finished loading statistics for Cubanas.')
