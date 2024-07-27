@@ -4,7 +4,8 @@ import json
 
 from pages.player_statistic_page import PlayersStatisticsPage
 from controllers.constants import TABLE_BOTTOM_MARKUP, PLAYER_STATISTIC_URL
-from participants import PARTICIPANTS, PLAYERS_PARTICIPANTS
+from participants import PARTICIPANTS, PLAYERS_PARTICIPANTS, ESPINOZA_PLAYERS_PARTICIPANTS
+from models.participants import Participants
 
 from typing import List, Dict, Any, Union, Tuple
 
@@ -31,7 +32,7 @@ def fetch_player_statistics(url: str) -> Union[None, Any]:
     return statistic_page.player
 
 
-def print_players_statistics_table(statistics: List[Dict[str, Any]], index: int, statistics_file_path: str):
+def print_players_statistics_table(participants: Participants, statistics: List[Dict[str, Any]], index: int, statistics_file_path: str):
     table_header = '''
 [table]
 [tr][th][/th][th]Игрок[/th][th]Клуб[/th][th][img]https://virtualsoccer.ru/pics/up.gif[/img][/th][/tr]
@@ -47,7 +48,7 @@ def print_players_statistics_table(statistics: List[Dict[str, Any]], index: int,
         previous_data = None
 
     for player_num, (player_id, data) in enumerate(statistics, start=index):
-        player = PLAYERS_PARTICIPANTS.get_participant_by_id(player_id)
+        player = participants.get_participant_by_id(player_id)
         player_team = player.team(PARTICIPANTS)
 
         if not player_team:
@@ -126,5 +127,25 @@ def print_statistic_olivares():
 
     total_result = calculate_players_total_result(statistics)
 
-    print_players_statistics_table(total_result, index=1, statistics_file_path=statistics_file_path)
+    print_players_statistics_table(participants=PLAYERS_PARTICIPANTS, statistics=total_result, index=1, statistics_file_path=statistics_file_path)
+    commit_new_statistics(total_result, statistics_file_path)
+
+def print_statistic_espinoza():
+    logger.info('Loading statistics for Espinoza...')
+    statistics_file_path = './fixtures/espinoza.json'
+    statistics = []
+
+    for player in ESPINOZA_PLAYERS_PARTICIPANTS.participants:
+        player_statistic = fetch_player_statistics(
+            PLAYER_STATISTIC_URL.format(player_id=player.id))
+
+        if player_statistic:
+            statistics.append(
+                {'id': player.id, 'statistics': player_statistic})
+
+    logger.info('Finished loading statistics for Olivares.')
+
+    total_result = calculate_players_total_result(statistics)
+
+    print_players_statistics_table(participants=ESPINOZA_PLAYERS_PARTICIPANTS, statistics=total_result, index=1, statistics_file_path=statistics_file_path)
     commit_new_statistics(total_result, statistics_file_path)

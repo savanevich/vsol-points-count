@@ -131,7 +131,7 @@ def print_statistic_cubanas():
 
     logger.info('Finished loading statistics for Cubanas.')
 
-    total_result = calculate_total_result(statistics, initial_result=STATISTIC_CORRECTIONS['cubanas'])
+    total_result = calculate_total_result(statistics)
     print_statistics_table(total_result, index=1, statistics_file_path=statistics_file_path)
     commit_new_statistics(total_result, statistics_file_path)
 

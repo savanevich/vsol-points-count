@@ -7,7 +7,7 @@ PARTICIPANTS = Participants([
     Team(10927, 'Виньялес', TeamSchool.RAIN, TeamDivision.D1),
     # Team(10924, 'Пуэрто Падре', TeamSchool.RAIN, TeamDivision.D2),
     Team(18588, 'Хесус-Менендес', TeamSchool.RAIN, TeamDivision.D1),
-    # Team(8985, 'Азукарерос (Санта-Клара)', TeamSchool.RAIN, TeamDivision.D2),
+    Team(8985, 'Азукарерос (Санта-Клара)', TeamSchool.RAIN, TeamDivision.D2),
     Team(21374, 'Санта-Клара', TeamSchool.RAIN, TeamDivision.D2),
     # Team(18593, 'Пальмира', TeamSchool.RAIN, TeamDivision.D3A),
     Team(8143, 'Ла-Гавана', TeamSchool.RAIN, TeamDivision.D2),
@@ -81,20 +81,32 @@ PARTICIPANTS = Participants([
 ])
 
 PLAYERS_PARTICIPANTS = Participants([
-    Player(6556790, 'Сальвадор Лисама', 8143),
-    Player(6549820, 'Лейниер Хуанес', 8155),
-    Player(6550871, 'Ромарио Агуэро', 8143),
-    Player(6789300, 'Рей Ангел Родригес', 8143),
-    Player(6648035, 'Арлей Хинохоса', 8985),
-    Player(6553591, 'Арнольдо Альварос', 8160),
+    Player(6846600, 'Беньямин Рендоньес', 18639),
     Player(6698751, 'Клэй Кастро', 18588),
-    Player(6737170, 'Жаде Куньонес', 8138),
-    Player(6737167, 'Вильфредо Корралес', 8138),
-    Player(6699481, 'Эрнан Ларринага', 21141),
+    Player(6789300, 'Рей Ангел Родригес', 8143),
+    Player(6894046, 'Эрик Роселл', 18639),
+    Player(6842986, 'Хосе Алфонсо', 8160),
 ])
 
-STATISTIC_CORRECTIONS = {
-    'cubanas': {
-        "Уракан (Ольгин)": {"pluses": -2, "minuses": 13, "total": 11}
-    }
-}
+ESPINOZA_PLAYERS_PARTICIPANTS = Participants([
+    Player(6422841, 'Эдуард Мартинез', 8143),
+    Player(6556790, 'Сальвадор Лисама', 8143),
+    Player(6278096, 'Джоэл Феррон', 8985),
+    Player(6510694, 'Дарвин Казанова', 8985),
+    Player(6418920, 'Хорхе Фигуэрас', 8143),
+    Player(6277010, 'Минни Мигель', 8143),
+    Player(6418931, 'Чико Риос', 8143),
+    Player(6549820, 'Лейниер Хуанес', 8155),
+    Player(6418928, 'Виктор Кутиньо', 8155),
+    Player(6648299, 'Рейнель Легра', 10927),
+    Player(6288655, 'Рейчарлес Фолх', 10927),
+    Player(6789297, 'Реутилио Мартине', 8967),
+    Player(6511108, 'Сиксто Гарлобо', 8967),
+    Player(6277351, 'Йордан Францис', 8967),
+    Player(6460091, 'Луис Сюидад', 8160),
+    Player(6324938, 'Янни Бернардез', 8160),
+    Player(6510696, 'Лизардо Эрнандес', 8160),
+    Player(6341928, 'Даймар Амикалес', 8138),
+])
+
+STATISTIC_CORRECTIONS = {}
