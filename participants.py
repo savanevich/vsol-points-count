@@ -16,7 +16,7 @@ PARTICIPANTS = Participants([
     # Team(8172, 'Сьенфуэгос', TeamSchool.RAIN, TeamDivision.D3A),
     # Team(10917, 'Тринидад', TeamSchool.RAIN, TeamDivision.D2),
     # Team(10920, 'Морон', TeamSchool.RAIN, TeamDivision.D3A),
-    Team(8965, 'Мордасо (Сагуа-ла-Гранде)', TeamSchool.RAIN, TeamDivision.D2),
+    # Team(8965, 'Мордасо (Сагуа-ла-Гранде)', TeamSchool.RAIN, TeamDivision.D2),
     # Team(8962, 'Провинция-ла-Гавана', TeamSchool.RAIN, TeamDivision.D3A),
     # Team(18599, 'Ягуаяй', TeamSchool.RAIN, TeamDivision.D3A),
     # Team(21066, 'Хиро де Пьелес (Гавана)', TeamSchool.RAIN, TeamDivision.D3B),
@@ -83,9 +83,13 @@ PARTICIPANTS = Participants([
 PLAYERS_PARTICIPANTS = Participants([
     Player(6846600, 'Беньямин Рендоньес', 18639),
     Player(6698751, 'Клэй Кастро', 18588),
+    Player(6894035, 'Хэйсель Базил', 18588),
+    Player(6937056, 'Бенито Бари', 18588),
     Player(6789300, 'Рей Ангел Родригес', 8143),
     Player(6894046, 'Эрик Роселл', 18639),
     Player(6842986, 'Хосе Алфонсо', 8160),
+    Player(6997024, 'Жорже Ларринага', 8967),
+    Player(7000399, 'Хорхе-Карлос Капаибо', 18639),
 ])
 
 ESPINOZA_PLAYERS_PARTICIPANTS = Participants([
@@ -103,10 +107,12 @@ ESPINOZA_PLAYERS_PARTICIPANTS = Participants([
     Player(6789297, 'Реутилио Мартине', 8967),
     Player(6511108, 'Сиксто Гарлобо', 8967),
     Player(6277351, 'Йордан Францис', 8967),
+    Player(6463416, 'Фиделе Гаго', 8967),
     Player(6460091, 'Луис Сюидад', 8160),
     Player(6324938, 'Янни Бернардез', 8160),
     Player(6510696, 'Лизардо Эрнандес', 8160),
     Player(6341928, 'Даймар Амикалес', 8138),
+    Player(6852889, 'Хуан Андреус', 8155),
 ])
 
 STATISTIC_CORRECTIONS = {}
