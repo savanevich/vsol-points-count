@@ -4,7 +4,7 @@ import json
 
 from pages.player_statistic_page import PlayersStatisticsPage
 from controllers.constants import TABLE_BOTTOM_MARKUP, PLAYER_STATISTIC_URL
-from participants import PARTICIPANTS, PLAYERS_PARTICIPANTS, ESPINOZA_PLAYERS_PARTICIPANTS
+from participants import PARTICIPANTS, PLAYERS_PARTICIPANTS, ESPINOZA_PLAYERS_PARTICIPANTS, STATISTIC_CORRECTIONS
 from models.participants import Participants
 
 from typing import List, Dict, Any, Union, Tuple
@@ -35,7 +35,7 @@ def fetch_player_statistics(url: str) -> Union[None, Any]:
 def print_players_statistics_table(participants: Participants, statistics: List[Dict[str, Any]], index: int, statistics_file_path: str):
     table_header = '''
 [table]
-[tr][th][/th][th]Игрок[/th][th]Клуб[/th][th][img]https://virtualsoccer.ru/pics/up.gif[/img][/th][/tr]
+[tr][th][/th][th]Игрок[/th][th]Клуб[/th][th][img]https://virtualsoccer.ru/pics/up.gif[/img][/th][th]Баллы ТЦ[/th][th]Сумма[/th][/tr]
 '''
 
     result = [table_header]
@@ -80,7 +80,7 @@ def print_players_statistics_table(participants: Participants, statistics: List[
         row = (
             f'[tr][td]{player_num} {diff_num_html}[/td][td][url=https://virtualsoccer.ru/player.php?num={player_id}][color=#0000BF]{player.name}[/color][/url][/td]'
             f'[td][img]https://virtualsoccer.ru/pics/teams18/{player_team.id}.png[/img] [url=https://virtualsoccer.ru/roster.php?num={player_team.id}]'
-            f'[color=#0000BF]{player_team.name}[/color][/url][/td][td]{data["total"]} {diff_html}[/td][/tr]\n'
+            f'[color=#0000BF]{player_team.name}[/color][/url][/td][td]{data["points"]}[/td][td]{data["additional"]}[/td][td]{data["total"]} {diff_html}[/td][/tr]\n'
         )
         result.append(row)
 
@@ -88,11 +88,16 @@ def print_players_statistics_table(participants: Participants, statistics: List[
     print(''.join(result))
 
 
-def calculate_players_total_result(statistics: List[Dict[str, Any]]) -> List[Tuple[str, Dict[str, Any]]]:
+def calculate_players_total_result(statistics: List[Dict[str, Any]], additional_points: Dict[str, int]) -> List[Tuple[str, Dict[str, Any]]]:
     total_result = {}
 
     for player in statistics:
-        total_result[player['id']] = {"total": player['statistics'].pluses}
+        additional = additional_points.get(player['id'], 0)
+        total_result[player['id']] = {
+            "points": player['statistics'].pluses,
+            "additional": additional,
+            "total": player['statistics'].pluses + additional
+        }
 
     sorted_total_result = sorted(
         total_result.items(), key=lambda x: x[1]["total"], reverse=True)
@@ -125,7 +130,7 @@ def print_statistic_olivares():
 
     logger.info('Finished loading statistics for Olivares.')
 
-    total_result = calculate_players_total_result(statistics)
+    total_result = calculate_players_total_result(statistics, additional_points=STATISTIC_CORRECTIONS['olivares'])
 
     print_players_statistics_table(participants=PLAYERS_PARTICIPANTS, statistics=total_result, index=1, statistics_file_path=statistics_file_path)
     commit_new_statistics(total_result, statistics_file_path)
@@ -145,7 +150,7 @@ def print_statistic_espinoza():
 
     logger.info('Finished loading statistics for Olivares.')
 
-    total_result = calculate_players_total_result(statistics)
+    total_result = calculate_players_total_result(statistics, additional_points=STATISTIC_CORRECTIONS['espinoza'])
 
     print_players_statistics_table(participants=ESPINOZA_PLAYERS_PARTICIPANTS, statistics=total_result, index=1, statistics_file_path=statistics_file_path)
     commit_new_statistics(total_result, statistics_file_path)

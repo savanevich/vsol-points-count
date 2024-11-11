@@ -3,7 +3,9 @@ import logging
 import json
 
 from pages.statistic_page import StatisticsPage
-from controllers.constants import CURRENT_SEASON_ALL_TOURNAMENTS_STATISTIC_URL, COUNTRY_CUP_STATISTIC_URL, CHALLENGE_CUP_STATISTIC_URL, OFF_SEASON_CUP_TOURNAMENTS_STATISTIC_URL, CHAMPIONSHIP_TOURNAMENTS_STATISTIC_URL, TABLE_HEADER_MARKUP, TABLE_BOTTOM_MARKUP
+from controllers.constants import CURRENT_SEASON_ALL_TOURNAMENTS_STATISTIC_URL, COUNTRY_CUP_STATISTIC_URL, \
+    CHALLENGE_CUP_STATISTIC_URL, OFF_SEASON_CUP_TOURNAMENTS_STATISTIC_URL, CHAMPIONSHIP_TOURNAMENTS_STATISTIC_URL, \
+    TABLE_HEADER_MARKUP, TABLE_BOTTOM_MARKUP, TABLE_HEADER_MARKUP_WITH_ADDITIONAL_POINTS
 from participants import PARTICIPANTS, STATISTIC_CORRECTIONS
 
 logger = logging.getLogger('scraping.get_statistic')
@@ -29,8 +31,8 @@ def fetch_statistics(url):
     return statistic_page.teams
 
 
-def print_statistics_table(statistics, index, statistics_file_path):
-    result = TABLE_HEADER_MARKUP
+def print_statistics_table(statistics, index, statistics_file_path, with_additional_points=False):
+    result = TABLE_HEADER_MARKUP if not with_additional_points else TABLE_HEADER_MARKUP_WITH_ADDITIONAL_POINTS
 
     try:
         with open(statistics_file_path, 'r', encoding='utf-8') as file:
@@ -65,7 +67,7 @@ def print_statistics_table(statistics, index, statistics_file_path):
                             diff_num_html = f'[size=60][color=#FF0000]({prev_participant_num - team_num})[/color][/size]'
 
         result += (
-            f'[tr][td]{team_num} {diff_num_html}[/td][td][img]https://virtualsoccer.ru/pics/teams18/{team.id}.png[/img] [url=https://virtualsoccer.ru/roster.php?num={team.id}][color=#0000BF]{team_name}[/color][/url][/td][td]{team.division.value}[/td][td]{data["pluses"]}{minuses}[/td]'
+            f'[tr][td]{team_num} {diff_num_html}[/td][td][img]https://virtualsoccer.ru/pics/teams18/{team.id}.png[/img] [url=https://virtualsoccer.ru/roster.php?num={team.id}][color=#0000BF]{team_name}[/color][/url][/td][td]{team.division.value}[/td][td]{data["pluses"]}{minuses}[/td]{'[td]' + str(data["pluses"] + data["minuses"]) + '[/td]' + '[td]' + str(data["additional"]) + '[/td]' if with_additional_points else ''}'
             f'[td]{data["total"]} {diff_html}[/td][/tr]\n'
         )
 
@@ -73,14 +75,14 @@ def print_statistics_table(statistics, index, statistics_file_path):
     print(result)
 
 
-def calculate_total_result(statistics, initial_result=None):
+def calculate_total_result(statistics, additional_points=None):
     total_result = {}
 
     for team in PARTICIPANTS.participants:
-        if initial_result and team.name in initial_result:
-            total_result[team.name] = initial_result[team.name]
+        if additional_points and team.name in additional_points:
+            total_result[team.name] = {"pluses": 0, "minuses": 0, "additional": additional_points[team.name], "total": 0}
         else:
-            total_result[team.name] = {"pluses": 0, "minuses": 0, "total": 0}
+            total_result[team.name] = {"pluses": 0, "minuses": 0, "additional": 0, "total": 0}
 
         for tournament_statistic in statistics:
             for team_statistic in tournament_statistic:
@@ -89,6 +91,9 @@ def calculate_total_result(statistics, initial_result=None):
                     total_result[team_name]["pluses"] += team_statistic.pluses
                     total_result[team_name]["minuses"] += team_statistic.minuses
                     total_result[team_name]["total"] += team_statistic.total
+
+
+        total_result[team.name]["total"] += total_result[team.name]["additional"]
 
     sorted_total_result = sorted(
         total_result.items(), key=lambda x: x[1]["total"], reverse=True)
@@ -131,8 +136,8 @@ def print_statistic_cubanas():
 
     logger.info('Finished loading statistics for Cubanas.')
 
-    total_result = calculate_total_result(statistics)
-    print_statistics_table(total_result, index=1, statistics_file_path=statistics_file_path)
+    total_result = calculate_total_result(statistics, additional_points=STATISTIC_CORRECTIONS['cubanas'])
+    print_statistics_table(total_result, index=1, statistics_file_path=statistics_file_path, with_additional_points=True)
     commit_new_statistics(total_result, statistics_file_path)
 
 
